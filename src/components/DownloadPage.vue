@@ -42,14 +42,24 @@ socket.on('download-done', (data: { link: string, pid: number }) => {
   <div class="wrapper">
     <template v-for="pid in Object.keys(progresses)" class="progress-container list-item">
         <div class="element">
-          <div>{{ pid }}</div>
+          <div>
+            {{ pid }}
+            <div>
+              <video class="embed-video" v-if="progresses[pid].downloadLink"  controls>
+                <source v-bind:src="progresses[pid].downloadLink" type="video/mp4">
+                Your browser does not support HTML video.
+              </video>
+            </div>
+          </div>
           <div>
             <ProgressBar v-bind:percent="progresses[pid].percent"></ProgressBar>
           </div>
           <div class="center">{{ progresses[pid].currentSpeed }}</div>
           <div>{{ progresses[pid].eta }}</div>
           <div>{{ progresses[pid].totalSize }}</div>
-          <div><a v-if="progresses[pid].downloadLink" v-bind:href="progresses[pid].downloadLink">Download</a></div>
+          <div>
+            <a  class="download-btn" v-if="progresses[pid].downloadLink" v-bind:href="progresses[pid].downloadLink">Download</a><p></p>
+          </div>
 
         </div>
     </template>
@@ -57,6 +67,21 @@ socket.on('download-done', (data: { link: string, pid: number }) => {
 </template>
 
 <style scoped lang="scss">
+
+.embed-video {
+  padding: 5px;
+  margin: 5px;
+  width: 80%;
+}
+
+.download-btn {
+  padding: 22px;
+  border-radius: 10px;
+  background: #BB000E;
+
+  font-size: 16px;
+  color: white;
+}
 
 #send-request-btn {
   padding: 22px;
