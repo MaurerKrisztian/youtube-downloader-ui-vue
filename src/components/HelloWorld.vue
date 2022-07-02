@@ -3,7 +3,7 @@ import {ref} from 'vue'
 import socketClient from "socket.io-client";
 import ProgressBar from "./ProgressBar.vue";
 
-const SERVER = "http://localhost:3000";
+const SERVER = "https://test.mytaskplan.me" // 'http://localhost:3088/';
 var socket = socketClient(SERVER);
 let input = ref("https://youtu.be/ouncVBiye_M")
 let progresses = ref<{ [pid: string]: { percent: number, totalSize: string, eta: string, currentSpeed: string, downloadLink?: string } }>({})
