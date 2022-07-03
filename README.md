@@ -1,6 +1,6 @@
 # youtube-downloader-ui-vue
 
-https://main--snazzy-kitsune-c26ded.netlify.app/
+Demo: https://youtube-downloader-app.netlify.app/
 
 
 API: https://github.com/MaurerKrisztian/youtube-downloader-api
