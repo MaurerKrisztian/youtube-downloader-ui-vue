@@ -10,7 +10,7 @@ let fileFormat = ref("mp4")
 let progresses = ref<{ [pid: string]: { percent: number, totalSize: string, eta: string, currentSpeed: string, downloadLink?: string } }>({})
 
 const requestDownlaod = () => {
-  socket.emit('download-req', {link: input.value, format: fileFormat});
+  socket.emit('download-req', {link: input.value, format: fileFormat.value});
 }
 
 socket.on('download-progress', (data: {
