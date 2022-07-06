@@ -6,10 +6,11 @@ import ProgressBar from "./ProgressBar.vue";
 const SERVER = "https://test.mytaskplan.me" // 'http://localhost:3088/';
 var socket = socketClient(SERVER);
 let input = ref("")
+let fileFormat = ref("mp4")
 let progresses = ref<{ [pid: string]: { percent: number, totalSize: string, eta: string, currentSpeed: string, downloadLink?: string } }>({})
 
 const requestDownlaod = () => {
-  socket.emit('download-req', {link: input.value});
+  socket.emit('download-req', {link: input.value, format: fileFormat});
 }
 
 socket.on('download-progress', (data: {
@@ -36,6 +37,11 @@ socket.on('download-done', (data: { link: string, pid: number }) => {
 
   <div class="title"><b> Youtube downloader </b></div>
   <input type="text" id="link-input" placeholder="put the youtube link here" v-model="input">
+  <select class="select-format" name="format" id="cars" v-model="fileFormat">
+    <option value="mp4">mp4</option>
+    <option value="mp3">mp3</option>
+  </select>
+
   <button id="send-request-btn" @click="requestDownlaod">download</button>
   <div id="done"></div>
 
@@ -72,6 +78,13 @@ socket.on('download-done', (data: { link: string, pid: number }) => {
   padding: 5px;
   margin: 5px;
   width: 80%;
+}
+
+.select-format{
+  padding: 22px;
+  font-size: 16px;
+  border-radius: 10px;
+  margin: 5px;
 }
 
 .download-btn {
