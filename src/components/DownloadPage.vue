@@ -4,7 +4,7 @@ import socketClient from "socket.io-client";
 import ProgressBar from "./ProgressBar.vue";
 
 const SERVER = "https://test.mytaskplan.me" // 'http://localhost:3088/';
-var socket = socketClient(SERVER);
+const socket = socketClient(SERVER);
 let input = ref("")
 let fileFormat = ref("mp4")
 let progresses = ref<{ [pid: string]: { percent: number, totalSize: string, eta: string, currentSpeed: string, downloadLink?: string } }>({})
@@ -20,16 +20,24 @@ socket.on('download-progress', (data: {
   eta: string,
   currentSpeed: string
 }) => {
-  console.log(data)
   progresses.value[data.meta.pid] = {...progresses.value[data.meta.pid], ...data}
 
 });
 
-
 socket.on('download-done', (data: { link: string, pid: number }) => {
-  console.log(data)
   progresses.value[data.pid] = {...progresses.value[data.pid], downloadLink: data.link}
 });
+
+function download(link: string, fileName: string){
+  fetch(link)
+      .then((res) => { return res.blob(); })
+      .then((data) => {
+        const a = document.createElement("a");
+        a.href = window.URL.createObjectURL(data);
+        a.download = fileName;
+        a.click();
+      });
+}
 
 </script>
 
@@ -63,9 +71,10 @@ socket.on('download-done', (data: { link: string, pid: number }) => {
           <div class="center">{{ progresses[pid].currentSpeed }}</div>
           <div>{{ progresses[pid].eta }}</div>
           <div>{{ progresses[pid].totalSize }}</div>
-          <div>
-            <a  class="download-btn" v-if="progresses[pid].downloadLink" v-bind:href="progresses[pid].downloadLink">Download</a><p></p>
-          </div>
+
+            <div class="download-btn" v-if="progresses[pid].downloadLink" v-on:click="download(progresses[pid].downloadLink, pid)">
+              Download
+            </div>
 
         </div>
     </template>
@@ -88,6 +97,7 @@ socket.on('download-done', (data: { link: string, pid: number }) => {
 }
 
 .download-btn {
+  cursor: pointer;
   padding: 22px;
   border-radius: 10px;
   background: #BB000E;
